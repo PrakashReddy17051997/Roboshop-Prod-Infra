@@ -1,0 +1,94 @@
+pipeline {
+    agent {
+        node {
+            label 'agent-1'
+        }
+    }
+    
+    options {
+        timeout(time: 1, unit:'HOURS')
+        disableConcurrentBuilds()
+        ansiColor('xterm')
+    }
+    parameters{
+        choice(name: 'action', choices: ['apply', 'destroy'], description: 'Pick your choice')
+    }
+    stages {
+        stage('terraform init') {
+            steps {
+                sh """
+                    cd 03-VPN-setup
+                    terraform init -reconfigure
+                    """
+            }
+        }
+        stage('terraform plan') {
+            steps {
+                sh """
+                    cd 03-VPN-setup
+                    terraform plan
+                    """
+            }
+        }
+        stage('Apply') {
+            when {
+                expression{
+                    params.action == 'apply'
+                }
+            }
+            // input {
+            //     message "Should we continue Infra Creation?"
+            //     ok "Yes, we should"
+            // }
+            steps {
+                sh """
+                    cd 03-VPN-setup
+                    terraform apply -auto-approve
+                    """
+                    script{
+                        def params = [
+                            string(name: 'apply', value: "apply")
+                            ]
+                        build job: "04-databases", wait: true, parameters: params
+            }
+            }
+            }
+        
+        stage('Destory') {
+            when {
+                expression{
+                    params.action == 'destroy'
+                }
+            }
+            // input {
+            //     message "Should we continue Infra Destroy?"
+            //     ok "Yes, we should"
+            // }
+            steps {
+                sh """
+                    cd 03-VPN-setup
+                    terraform destroy -auto-approve
+                    """
+                    script{
+                        def params = [
+                            string(name: 'destroy', value: "destroy")
+                            ]
+                        build job: "02-security-groups", wait: true, parameters: params
+                    }
+            }
+        }
+        
+    }
+    // post build
+    post {
+        always{
+            echo 'We Will always Win again!'
+        }
+        failure {
+            echo 'failure occured, inform the concerned teams over slack'
+        }
+        success {
+            echo 'Confragulations on success build'
+        }
+    }
+}

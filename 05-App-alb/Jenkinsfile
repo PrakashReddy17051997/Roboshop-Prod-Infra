@@ -1,0 +1,81 @@
+pipeline {
+    agent {
+        node {
+            label 'agent-1'
+        }
+    }
+    
+    options {
+        timeout(time: 1, unit:'HOURS')
+        disableConcurrentBuilds()
+        ansiColor('xterm')
+    }
+    parameters{
+        choice(name: 'action', choices: ['apply', 'destroy'], description: 'Pick your choice')
+    }
+    stages {
+        stage('terraform init') {
+            steps {
+                sh """
+                    cd 05-App-alb
+                    terraform init -reconfigure
+                    """
+            }
+        }
+        stage('terraform plan') {
+            steps {
+                sh """
+                    cd 05-App-alb
+                    terraform plan
+                    """
+            }
+        }
+        stage('Apply') {
+            when {
+                expression{
+                    params.action == 'apply'
+                }
+            }
+            // input {
+            //     message "Should we continue Infra Creation?"
+            //     ok "Yes, we should"
+            // }
+            steps {
+                sh """
+                    cd 05-App-alb
+                    terraform apply -auto-approve
+                    """
+            }
+        }
+        stage('Destory') {
+            when {
+                expression{
+                    params.action == 'destroy'
+                }
+            }
+            // input {
+            //     message "Should we continue Infra Destroy?"
+            //     ok "Yes, we should"
+            // }
+            steps {
+                sh """
+                    cd 05-App-alb
+                    terraform destroy -auto-approve
+                    """
+            }
+        }
+        
+    }
+    // post build
+    post {
+        always{
+            echo 'We Will always Win again!'
+        }
+        failure {
+            echo 'failure occured, inform the concerned teams over slack'
+        }
+        success {
+            echo 'Confragulations on success build'
+        }
+    }
+}
