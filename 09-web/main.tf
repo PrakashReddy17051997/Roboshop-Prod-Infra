@@ -52,7 +52,7 @@ resource "null_resource" "web" {
 
         inline = [ 
             "chmod +x /tmp/bootstrap.sh",
-            "sudo sh /tmp/bootstrap.sh web ${variables.environment}"
+            "sudo sh /tmp/bootstrap.sh web ${var.environment}"
          ]
       
     }

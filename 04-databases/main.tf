@@ -40,7 +40,7 @@ resource "null_resource" "mongodb" {
 
         inline = [ 
             "chmod +x /tmp/bootstrap.sh",
-            "sudo sh /tmp/bootstrap.sh mongodb dev"
+            "sudo sh /tmp/bootstrap.sh mongodb ${var.environment}"
          ]
       
     }
@@ -100,7 +100,7 @@ resource "null_resource" "redis" {
 
         inline = [ 
             "chmod +x /tmp/bootstrap.sh",
-            "sudo sh /tmp/bootstrap.sh redis dev"
+            "sudo sh /tmp/bootstrap.sh redis ${var.environment}"
          ]
       
     }
@@ -160,7 +160,7 @@ resource "null_resource" "mysql" {
 
         inline = [ 
             "chmod +x /tmp/bootstrap.sh",
-            "sudo sh /tmp/bootstrap.sh mysql dev"
+            "sudo sh /tmp/bootstrap.sh mysql ${var.environment}"
          ]
       
     }
@@ -220,7 +220,7 @@ resource "null_resource" "rabbitmq" {
 
         inline = [ 
             "chmod +x /tmp/bootstrap.sh",
-            "sudo sh /tmp/bootstrap.sh rabbitmq dev"
+            "sudo sh /tmp/bootstrap.sh rabbitmq ${var.environment}"
          ]
       
     }
