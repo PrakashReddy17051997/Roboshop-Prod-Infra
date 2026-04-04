@@ -24,7 +24,7 @@ pipeline {
                             cd 04-databases
                             terraform init -upgrade
                             terraform init -reconfigure
-                            terraform plan
+                            
                             terraform destroy -auto-approve
                         """
                     }
@@ -35,7 +35,7 @@ pipeline {
                             cd 05-App-alb
                             terraform init -upgrade
                             terraform init -reconfigure
-                            terraform plan
+                            
                             terraform destroy -auto-approve
                         """
                     }
@@ -49,7 +49,7 @@ pipeline {
                     cd 03-VPN-setup
                     terraform init -upgrade
                     terraform init -reconfigure
-                    terraform plan
+                    
                     terraform destroy -auto-approve
                     """
             }
@@ -60,7 +60,7 @@ pipeline {
                     cd 02-security-groups
                     terraform init -upgrade
                     terraform init -reconfigure
-                    terraform plan
+                    
                     terraform destroy -auto-approve
                     """
             }
@@ -71,7 +71,7 @@ pipeline {
                     cd 01-vpc-creation
                     terraform init -upgrade
                     terraform init -reconfigure
-                    terraform plan
+                    
                     terraform destroy -auto-approve
                     """
             }
