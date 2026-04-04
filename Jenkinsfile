@@ -17,7 +17,7 @@ pipeline {
             steps {
                 sh """
                     cd 01-vpc-creation
-                     terraform init -upgrade 
+                     terraform init -reconfigure 
                     terraform plan
                     terraform apply -auto-approve
                     """
@@ -27,7 +27,7 @@ pipeline {
             steps {
                 sh """
                     cd 02-security-groups
-                     terraform init -upgrade 
+                     terraform init -reconfigure 
                     terraform plan
                     terraform apply -auto-approve
                     """
@@ -37,7 +37,7 @@ pipeline {
             steps {
                 sh """
                     cd 03-VPN-setup
-                     terraform init -upgrade 
+                     terraform init -reconfigure 
                     terraform plan
                     terraform apply -auto-approve
                     """
@@ -49,7 +49,7 @@ pipeline {
                     steps {
                         sh """
                             cd 04-databases
-                             terraform init -upgrade 
+                             terraform init -reconfigure 
                             terraform plan
                             terraform apply -auto-approve
                         """
@@ -59,7 +59,7 @@ pipeline {
                     steps {
                         sh """
                             cd 05-App-alb
-                             terraform init -upgrade 
+                             terraform init -reconfigure 
                             terraform plan
                             terraform apply -auto-approve
                         """
